@@ -1,0 +1,58 @@
+erDiagram
+    USER ||--o{ PROJECT : "owns (owner)"
+    USER }o--o{ PROJECT : "member of (members[])"
+    PROJECT ||--o{ ISSUE : "contains (project)"
+    PROJECT ||--o{ LABEL : "defines (project)"
+    USER ||--o{ ISSUE : "reports (reporter)"
+    USER |o--o{ ISSUE : "assigned to (assignee)"
+    ISSUE }o--o{ LABEL : "tagged with (labels[])"
+    ISSUE ||--o{ COMMENT : "has (issue)"
+    USER ||--o{ COMMENT : "writes (author)"
+    ISSUE ||--o{ ATTACHMENT : "embeds"
+    USER {
+        ObjectId _id PK
+        string name
+        string email UK
+        string passwordHash "bcrypt, select:false"
+        string role "member|project_manager|admin"
+    }
+    PROJECT {
+        ObjectId _id PK
+        string name
+        string key UK
+        string description
+        ObjectId owner FK
+        ObjectId[] members FK
+    }
+    ISSUE {
+        ObjectId _id PK
+        string title
+        string description
+        string status "open|in_progress|resolved|closed"
+        string priority "low|medium|high|critical"
+        ObjectId project FK
+        ObjectId reporter FK
+        ObjectId assignee FK
+        ObjectId[] labels FK
+        Attachment[] attachments "embedded"
+    }
+    COMMENT {
+        ObjectId _id PK
+        ObjectId issue FK
+        ObjectId author FK
+        string body
+    }
+    LABEL {
+        ObjectId _id PK
+        string name "unique per project"
+        string color
+        ObjectId project FK
+    }
+    ATTACHMENT {
+        ObjectId _id
+        string filename
+        string url
+        string mimeType
+        number size
+    }
+    
