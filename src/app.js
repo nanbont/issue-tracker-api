@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-
+const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
 function createApp() {
   const app = express();
 
@@ -9,6 +9,10 @@ function createApp() {
 
   app.get('/api/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime() }));
 
+
+  app.use(notFoundHandler);
+  app.use(errorHandler);
+  
   return app;
 }
 
